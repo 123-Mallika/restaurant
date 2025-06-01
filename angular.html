@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html ng-app="studentApp">
+<head>
+  <title>Student Management</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="StudentController">
+  <h1>Student Management System</h1>
+  
+  <!-- Add Student Form -->
+  <form ng-submit="addStudent()">
+    <input type="text" ng-model="newStudent.name" placeholder="Name" required>
+    <input type="text" ng-model="newStudent.age" placeholder="Age" required>
+    <input type="text" ng-model="newStudent.course" placeholder="Course" required>
+    <button type="submit">Add Student</button>
+  </form>
+  
+  <!-- Student List -->
+  <ul>
+    <li ng-repeat="student in students">
+      {{student.name}} ({{student.age}}, {{student.course}})
+      <button ng-click="editStudent(student)">Edit</button>
+      <button ng-click="deleteStudent($index)">Delete</button>
+    </li>
+  </ul>
+
+  <!-- Edit Student Form -->
+  <form ng-if="editing" ng-submit="updateStudent()">
+    <input type="text" ng-model="selectedStudent.name" placeholder="Name" required>
+    <input type="text" ng-model="selectedStudent.age" placeholder="Age" required>
+    <input type="text" ng-model="selectedStudent.course" placeholder="Course" required>
+    <button type="submit">Update</button>
+  </form>
+  <script>var app = angular.module('studentApp', []);
+
+app.controller('StudentController', function($scope) {
+  $scope.students = [
+  ];
+
+  $scope.addStudent = function() {
+    $scope.students.push(angular.copy($scope.newStudent));
+    $scope.newStudent = {};
+  };
+
+  $scope.deleteStudent = function(index) {
+    $scope.students.splice(index, 1);
+  };
+
+  $scope.editStudent = function(student) {
+    $scope.editing = true;
+    $scope.selectedStudent = angular.copy(student);
+    $scope.originalStudent = student;
+  };
+
+  $scope.updateStudent = function() {
+    angular.copy($scope.selectedStudent, $scope.originalStudent);
+    $scope.editing = false;
+  };
+});
+</script>
+</body>
+</html>
